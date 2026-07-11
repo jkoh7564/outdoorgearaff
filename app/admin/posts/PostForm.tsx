@@ -38,6 +38,8 @@ export function PostForm({ post }: { post?: PostWithGear }) {
   const [seoTitle, setSeoTitle] = useState(post?.seo_title ?? "");
   const [seoDescription, setSeoDescription] = useState(post?.seo_description ?? "");
   const [scheduledAt, setScheduledAt] = useState(post?.scheduled_at ? post.scheduled_at.slice(0, 16) : "");
+  const [isFeatured, setIsFeatured] = useState(Boolean(post?.is_featured));
+  const [heroPriority, setHeroPriority] = useState(post?.hero_priority ?? 100);
   const [gearItems, setGearItems] = useState<GearItemInput[]>(gearInputFromPost(post));
   const [errors, setErrors] = useState<string[]>([]);
   const [suggestionError, setSuggestionError] = useState("");
@@ -70,6 +72,8 @@ export function PostForm({ post }: { post?: PostWithGear }) {
       seo_title: seoTitle,
       seo_description: seoDescription,
       scheduled_at: scheduledAt,
+      is_featured: isFeatured,
+      hero_priority: heroPriority,
       gearItems,
     };
 
@@ -151,6 +155,31 @@ export function PostForm({ post }: { post?: PostWithGear }) {
           <label className="grid gap-2 text-sm font-bold md:col-span-2">
             Hero image URL
             <input className="border border-[#c9c2b4] px-3 py-2 font-normal" value={heroImageUrl} onChange={(event) => setHeroImageUrl(event.target.value)} />
+          </label>
+        </div>
+        <div className="grid gap-5 border border-[#e5dfd2] bg-[#fffdf7] p-4 md:grid-cols-[1fr_180px] md:items-end">
+          <label className="flex items-start gap-3 text-sm font-bold">
+            <input
+              type="checkbox"
+              className="mt-1"
+              checked={isFeatured}
+              onChange={(event) => setIsFeatured(event.target.checked)}
+            />
+            <span>
+              Featured on homepage
+              <span className="mt-1 block font-normal leading-6 text-[#66736a]">
+                Use this post as a premium homepage hero candidate.
+              </span>
+            </span>
+          </label>
+          <label className="grid gap-2 text-sm font-bold">
+            Hero priority
+            <input
+              type="number"
+              className="border border-[#c9c2b4] px-3 py-2 font-normal"
+              value={heroPriority}
+              onChange={(event) => setHeroPriority(Number(event.target.value))}
+            />
           </label>
         </div>
         <div className="grid gap-5 md:grid-cols-2">

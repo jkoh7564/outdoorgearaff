@@ -32,6 +32,8 @@ export type Post = {
   seo_score: number | null;
   seo_score_notes: string | null;
   headline_suggestions: string[] | null;
+  is_featured: boolean | null;
+  hero_priority: number | null;
   published_at: string | null;
   created_at: string;
 };
@@ -61,5 +63,7 @@ export type PostEditorInput = {
   seo_title: string;
   seo_description: string;
   scheduled_at: string;
+  is_featured: boolean;
+  hero_priority: number;
   gearItems: GearItemInput[];
 };

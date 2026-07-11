@@ -79,6 +79,8 @@ export async function upsertPostWithGear(input: PostEditorInput) {
     seo_title: input.seo_title.trim() || null,
     seo_description: input.seo_description.trim() || null,
     scheduled_at: input.scheduled_at ? new Date(input.scheduled_at).toISOString() : null,
+    is_featured: input.is_featured,
+    hero_priority: Number.isFinite(input.hero_priority) ? input.hero_priority : 100,
     published_at: publishedAt,
   };
 

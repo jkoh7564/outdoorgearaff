@@ -8,8 +8,15 @@ export const dynamic = "force-dynamic";
 export default async function Home() {
   await ensureSeedData();
   const { data: posts, error } = await getPublishedPosts();
-  const featuredPost = posts?.[0];
-  const otherPosts = posts?.slice(1) ?? [];
+  const sortedPosts = [...(posts ?? [])].sort((a, b) => {
+    if (Boolean(a.is_featured) !== Boolean(b.is_featured)) return a.is_featured ? -1 : 1;
+    if ((a.hero_priority ?? 100) !== (b.hero_priority ?? 100)) {
+      return (a.hero_priority ?? 100) - (b.hero_priority ?? 100);
+    }
+    return new Date(b.published_at ?? b.created_at).getTime() - new Date(a.published_at ?? a.created_at).getTime();
+  });
+  const featuredPost = sortedPosts[0];
+  const otherPosts = sortedPosts.slice(1);
   const categories = Array.from(
     new Set((posts ?? []).flatMap((post) => post.gear_items.map((item) => item.category).filter(Boolean))),
   ).slice(0, 6);
