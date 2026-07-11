@@ -18,7 +18,13 @@ export default async function Home() {
   const featuredPost = sortedPosts[0];
   const otherPosts = sortedPosts.slice(1);
   const categories = Array.from(
-    new Set((posts ?? []).flatMap((post) => post.gear_items.map((item) => item.category).filter(Boolean))),
+    new Set(
+      (posts ?? []).flatMap((post) =>
+        post.gear_items
+          .map((item) => item.category)
+          .filter((category): category is string => Boolean(category)),
+      ),
+    ),
   ).slice(0, 6);
 
   return (
@@ -94,9 +100,13 @@ export default async function Home() {
               <section className="mt-8 flex flex-wrap items-center gap-3">
                 <span className="text-xs font-black uppercase tracking-[0.14em] text-[#66736a]">Popular categories</span>
                 {categories.map((category) => (
-                  <span key={category} className="border border-[#d9d4c7] bg-white px-3 py-2 text-sm font-bold text-[#37443b]">
+                  <Link
+                    key={category}
+                    href={`/categories/${encodeURIComponent(category)}`}
+                    className="border border-[#d9d4c7] bg-white px-3 py-2 text-sm font-bold text-[#37443b] transition hover:border-[#176b4d] hover:text-[#176b4d]"
+                  >
                     {category}
-                  </span>
+                  </Link>
                 ))}
               </section>
             ) : null}
