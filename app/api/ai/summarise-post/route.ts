@@ -49,6 +49,7 @@ export async function POST(request: Request) {
     const { error: updateError } = await supabase
       .from("posts")
       .update({
+        user_id: user.id,
         ai_summary: result.summary,
         ai_summary_source: `openai/${model}`,
         ai_summary_confidence: result.confidence,
