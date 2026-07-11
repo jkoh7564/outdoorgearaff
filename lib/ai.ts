@@ -3,6 +3,34 @@ type JsonSchema = {
   schema: Record<string, unknown>;
 };
 
+type ResponseContent = {
+  type?: string;
+  text?: string;
+  refusal?: string;
+};
+
+type ResponseOutput = {
+  type?: string;
+  content?: ResponseContent[];
+};
+
+function extractResponseText(payload: { output_text?: string; output?: ResponseOutput[] }) {
+  if (payload.output_text) return payload.output_text;
+
+  const text = payload.output
+    ?.flatMap((item) => item.content ?? [])
+    .find((content) => content.type === "output_text" && content.text)?.text;
+
+  if (text) return text;
+
+  const refusal = payload.output
+    ?.flatMap((item) => item.content ?? [])
+    .find((content) => content.refusal)?.refusal;
+
+  if (refusal) throw new Error(refusal);
+  return null;
+}
+
 export async function generateJsonWithOpenAI<T>({
   instructions,
   input,
@@ -44,7 +72,7 @@ export async function generateJsonWithOpenAI<T>({
   }
 
   const payload = await response.json();
-  const outputText = payload.output_text as string | undefined;
+  const outputText = extractResponseText(payload);
   if (!outputText) throw new Error("OpenAI returned no text output.");
 
   return JSON.parse(outputText) as T;
