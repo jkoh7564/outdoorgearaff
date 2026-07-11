@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 const links = [
   { href: "/", label: "Public site" },
@@ -47,6 +48,14 @@ function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
 
 export function AdminNav({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
+
+  async function signOut() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.replace("/login");
+    router.refresh();
+  }
 
   return (
     <div className="min-h-screen bg-[#f7f5ef] lg:grid lg:grid-cols-[260px_1fr]">
@@ -60,6 +69,13 @@ export function AdminNav({ children }: { children: ReactNode }) {
         <div className="mt-8">
           <NavLinks />
         </div>
+        <button
+          type="button"
+          onClick={signOut}
+          className="mt-8 flex min-h-11 w-full items-center border border-[#c9c2b4] px-4 py-3 text-sm font-bold text-[#425047] hover:bg-[#f7f5ef]"
+        >
+          Sign out
+        </button>
       </aside>
 
       <div className="min-w-0">
@@ -112,6 +128,13 @@ export function AdminNav({ children }: { children: ReactNode }) {
               <div className="mt-8">
                 <NavLinks onNavigate={() => setMenuOpen(false)} />
               </div>
+              <button
+                type="button"
+                onClick={signOut}
+                className="mt-8 flex min-h-11 w-full items-center border border-[#c9c2b4] px-4 py-3 text-sm font-bold text-[#425047]"
+              >
+                Sign out
+              </button>
             </aside>
           </div>
         ) : null}

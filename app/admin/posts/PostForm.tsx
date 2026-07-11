@@ -39,6 +39,14 @@ export function PostForm({ post }: { post?: PostWithGear }) {
   const [seoDescription, setSeoDescription] = useState(post?.seo_description ?? "");
   const [gearItems, setGearItems] = useState<GearItemInput[]>(gearInputFromPost(post));
   const [errors, setErrors] = useState<string[]>([]);
+  const [suggestionError, setSuggestionError] = useState("");
+  const [suggestingIndex, setSuggestingIndex] = useState<number | null>(null);
+  const [suggestion, setSuggestion] = useState<{
+    index: number;
+    features: string[];
+    benefits: string[];
+    confidence: number;
+  } | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const generatedSlug = useMemo(() => slug || slugify(title), [slug, title]);
@@ -67,6 +75,46 @@ export function PostForm({ post }: { post?: PostWithGear }) {
       const result = await savePost(input);
       if (result && !result.ok) setErrors(result.errors ?? ["Could not save post."]);
     });
+  }
+
+  async function suggestGearCopy(index: number) {
+    setSuggestionError("");
+    setSuggestion(null);
+    setSuggestingIndex(index);
+    const item = gearItems[index];
+    const response = await fetch("/api/ai/suggest-gear", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: item.name,
+        category: item.category,
+        affiliate_url: item.affiliate_url,
+        notes: `${title}\n${body}`,
+      }),
+    });
+    const payload = await response.json();
+    setSuggestingIndex(null);
+
+    if (!response.ok) {
+      setSuggestionError(payload.error ?? "Could not generate gear suggestions.");
+      return;
+    }
+
+    setSuggestion({
+      index,
+      features: payload.features,
+      benefits: payload.benefits,
+      confidence: payload.confidence,
+    });
+  }
+
+  function acceptSuggestion() {
+    if (!suggestion) return;
+    updateGear(suggestion.index, {
+      featuresText: suggestion.features.join("\n"),
+      benefitsText: suggestion.benefits.join("\n"),
+    });
+    setSuggestion(null);
   }
 
   return (
@@ -122,16 +170,63 @@ export function PostForm({ post }: { post?: PostWithGear }) {
             Add gear
           </button>
         </div>
+        {suggestionError ? (
+          <div className="border border-amber-200 bg-amber-50 p-3 text-sm font-semibold text-amber-800">
+            {suggestionError}
+          </div>
+        ) : null}
         {gearItems.map((item, index) => (
           <div key={item.id ?? index} className="grid gap-4 border border-[#d9d4c7] bg-white p-5">
             <div className="flex items-center justify-between">
               <h3 className="font-bold">Gear item {index + 1}</h3>
-              {gearItems.length > 1 ? (
-                <button type="button" className="text-sm font-bold text-red-700" onClick={() => setGearItems((items) => items.filter((_, itemIndex) => itemIndex !== index))}>
-                  Remove
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  disabled={suggestingIndex !== null}
+                  className="text-sm font-bold text-[#176b4d] disabled:opacity-60"
+                  onClick={() => suggestGearCopy(index)}
+                >
+                  {suggestingIndex === index ? "Suggesting..." : "Suggest copy"}
                 </button>
-              ) : null}
+                {gearItems.length > 1 ? (
+                  <button type="button" className="text-sm font-bold text-red-700" onClick={() => setGearItems((items) => items.filter((_, itemIndex) => itemIndex !== index))}>
+                    Remove
+                  </button>
+                ) : null}
+              </div>
             </div>
+            {suggestion?.index === index ? (
+              <div className="border border-[#b8d8ca] bg-[#f0f8f4] p-4">
+                <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <h4 className="font-bold">Suggested copy</h4>
+                  <span className="text-xs font-bold uppercase text-[#66736a]">
+                    {Math.round(suggestion.confidence * 100)}% confidence
+                  </span>
+                </div>
+                <div className="grid gap-4 text-sm md:grid-cols-2">
+                  <div>
+                    <p className="mb-2 font-bold">Features</p>
+                    <ul className="list-disc space-y-1 pl-5 text-[#37443b]">
+                      {suggestion.features.map((feature) => <li key={feature}>{feature}</li>)}
+                    </ul>
+                  </div>
+                  <div>
+                    <p className="mb-2 font-bold">Benefits</p>
+                    <ul className="list-disc space-y-1 pl-5 text-[#37443b]">
+                      {suggestion.benefits.map((benefit) => <li key={benefit}>{benefit}</li>)}
+                    </ul>
+                  </div>
+                </div>
+                <div className="mt-4 flex justify-end gap-3">
+                  <button type="button" className="border border-[#c9c2b4] px-4 py-2 text-sm font-bold" onClick={() => setSuggestion(null)}>
+                    Reject
+                  </button>
+                  <button type="button" className="bg-[#176b4d] px-4 py-2 text-sm font-bold text-white" onClick={acceptSuggestion}>
+                    Accept
+                  </button>
+                </div>
+              </div>
+            ) : null}
             <div className="grid gap-4 md:grid-cols-2">
               <label className="grid gap-2 text-sm font-bold">
                 Name

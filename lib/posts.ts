@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { slugify } from "@/lib/format";
+import { requireCurrentUser } from "@/lib/auth";
 import type { GearItemInput, PostEditorInput, PostWithGear } from "@/lib/types";
 
 function linesToArray(value: string) {
@@ -62,12 +63,14 @@ export async function getAdminPost(id: string) {
 }
 
 export async function upsertPostWithGear(input: PostEditorInput) {
+  const user = await requireCurrentUser();
   const { errors, slug } = validatePostInput(input);
   if (errors.length > 0) return { ok: false, errors };
 
   const supabase = await createClient();
   const publishedAt = input.status === "published" ? new Date().toISOString() : null;
   const postPayload = {
+    user_id: user.id,
     title: input.title.trim(),
     slug,
     body: input.body.trim() || null,
@@ -88,7 +91,7 @@ export async function upsertPostWithGear(input: PostEditorInput) {
   const keptIds: string[] = [];
 
   for (const item of input.gearItems) {
-    const gearPayload = toGearPayload(postId, item);
+    const gearPayload = toGearPayload(postId, user.id, item);
     const result = item.id
       ? await supabase.from("gear_items").update(gearPayload).eq("id", item.id).select("id").single()
       : await supabase.from("gear_items").insert(gearPayload).select("id").single();
@@ -104,7 +107,7 @@ export async function upsertPostWithGear(input: PostEditorInput) {
   }
 
   await supabase.from("audit_logs").insert({
-    actor: "owner",
+    actor: user.id,
     tool_name: input.id ? "update_post" : "create_post",
     target_table: "posts",
     target_id: postId,
@@ -115,8 +118,9 @@ export async function upsertPostWithGear(input: PostEditorInput) {
   return { ok: true, id: postId, slug };
 }
 
-function toGearPayload(postId: string, item: GearItemInput) {
+function toGearPayload(postId: string, userId: string, item: GearItemInput) {
   return {
+    user_id: userId,
     post_id: postId,
     name: item.name.trim(),
     category: item.category.trim() || null,

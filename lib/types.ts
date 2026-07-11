@@ -2,6 +2,7 @@ export type PostStatus = "draft" | "published";
 
 export type GearItem = {
   id: string;
+  user_id: string | null;
   post_id: string;
   name: string;
   category: string | null;
@@ -15,6 +16,7 @@ export type GearItem = {
 
 export type Post = {
   id: string;
+  user_id: string | null;
   slug: string;
   title: string;
   body: string | null;

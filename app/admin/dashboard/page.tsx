@@ -25,11 +25,19 @@ export default async function DashboardPage() {
     .map((post) => {
       const viewCount = (views ?? []).filter((view) => view.post_id === post.id).length;
       const clickCount = (clicks ?? []).filter((click) => click.post_id === post.id).length;
+      const recentCutoff = Date.now() - 7 * 86_400_000;
+      const recentViews = (views ?? []).filter(
+        (view) => view.post_id === post.id && new Date(view.created_at).getTime() >= recentCutoff,
+      ).length;
+      const recentClicks = (clicks ?? []).filter(
+        (click) => click.post_id === post.id && new Date(click.created_at).getTime() >= recentCutoff,
+      ).length;
+      const recentCtr = recentViews > 0 ? recentClicks / recentViews : 0;
       const ctr = viewCount > 0 ? clickCount / viewCount : 0;
       const ageDays = post.published_at
         ? (Date.now() - new Date(post.published_at).getTime()) / 86_400_000
         : 0;
-      const flag: Row["flag"] = ctr > 0.15 ? "Hot" : ageDays > 14 && clickCount === 0 ? "Cold" : "";
+      const flag: Row["flag"] = recentCtr > 0.15 ? "Hot" : ageDays > 14 && clickCount === 0 ? "Cold" : "";
       return { post, views: viewCount, clicks: clickCount, ctr, flag };
     })
     .sort((a, b) => b.ctr - a.ctr);
@@ -39,7 +47,7 @@ export default async function DashboardPage() {
       <section className="mx-auto max-w-6xl px-5 py-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="mt-1 text-[#66736a]">Views, clicks, and CTR are calculated from live event rows.</p>
+          <p className="mt-1 text-[#66736a]">Views, clicks, CTR, and hot/cold flags are calculated from live event rows.</p>
         </div>
         {postsError ? (
           <div className="border border-red-200 bg-red-50 p-4 text-red-700">{postsError.message}</div>
