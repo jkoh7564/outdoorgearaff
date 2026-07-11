@@ -9,8 +9,7 @@ export default async function AdminPostsPage() {
   const { data: posts, error } = await getAdminPosts();
 
   return (
-    <main className="min-h-screen">
-      <AdminNav />
+    <AdminNav>
       <section className="mx-auto max-w-6xl px-5 py-8">
         <div className="mb-6 flex items-end justify-between">
           <div>
@@ -60,6 +59,6 @@ export default async function AdminPostsPage() {
           <div className="border border-[#d9d4c7] bg-white p-6">No posts yet.</div>
         )}
       </section>
-    </main>
+    </AdminNav>
   );
 }

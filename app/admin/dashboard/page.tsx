@@ -35,8 +35,7 @@ export default async function DashboardPage() {
     .sort((a, b) => b.ctr - a.ctr);
 
   return (
-    <main className="min-h-screen">
-      <AdminNav />
+    <AdminNav>
       <section className="mx-auto max-w-6xl px-5 py-8">
         <div className="mb-6">
           <h1 className="text-3xl font-bold">Dashboard</h1>
@@ -89,6 +88,6 @@ export default async function DashboardPage() {
           <div className="border border-[#d9d4c7] bg-white p-6">No analytics yet.</div>
         )}
       </section>
-    </main>
+    </AdminNav>
   );
 }
