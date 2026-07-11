@@ -29,7 +29,7 @@ export default async function Home() {
           <nav className="flex items-center gap-5 text-sm font-bold text-[#425047]">
             <Link href="#guides">Guides</Link>
             <Link href="#newsletter">Newsletter</Link>
-            <Link href="/admin/posts" className="hidden sm:inline">Owner</Link>
+            <Link href="/admin/posts" className="hidden sm:inline">Editorial Studio</Link>
           </nav>
         </div>
       </header>

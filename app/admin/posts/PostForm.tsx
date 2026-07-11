@@ -131,7 +131,11 @@ export function PostForm({ post }: { post?: PostWithGear }) {
         </div>
       ) : null}
 
-      <section className="grid gap-5 border border-[#d9d4c7] bg-white p-5">
+      <section className="grid gap-5 border border-[#d9d4c7] bg-white p-5 shadow-sm">
+        <div className="border-b border-[#e5dfd2] pb-4">
+          <p className="text-xs font-black uppercase tracking-[0.14em] text-[#176b4d]">Content</p>
+          <h2 className="mt-1 text-xl font-black text-[#18231d]">Article basics</h2>
+        </div>
         <label className="grid gap-2 text-sm font-bold">
           Title
           <input className="border border-[#c9c2b4] px-3 py-2 font-normal" value={title} onChange={(event) => setTitle(event.target.value)} />
@@ -156,6 +160,13 @@ export function PostForm({ post }: { post?: PostWithGear }) {
             Hero image URL
             <input className="border border-[#c9c2b4] px-3 py-2 font-normal" value={heroImageUrl} onChange={(event) => setHeroImageUrl(event.target.value)} />
           </label>
+        </div>
+      </section>
+
+      <section className="grid gap-5 border border-[#d9d4c7] bg-white p-5 shadow-sm">
+        <div className="border-b border-[#e5dfd2] pb-4">
+          <p className="text-xs font-black uppercase tracking-[0.14em] text-[#176b4d]">Homepage and SEO</p>
+          <h2 className="mt-1 text-xl font-black text-[#18231d]">Discovery controls</h2>
         </div>
         <div className="grid gap-5 border border-[#e5dfd2] bg-[#fffdf7] p-4 md:grid-cols-[1fr_180px] md:items-end">
           <label className="flex items-start gap-3 text-sm font-bold">
@@ -192,6 +203,13 @@ export function PostForm({ post }: { post?: PostWithGear }) {
             <input className="border border-[#c9c2b4] px-3 py-2 font-normal" value={seoDescription} onChange={(event) => setSeoDescription(event.target.value)} />
           </label>
         </div>
+      </section>
+
+      <section className="grid gap-5 border border-[#d9d4c7] bg-white p-5 shadow-sm">
+        <div className="border-b border-[#e5dfd2] pb-4">
+          <p className="text-xs font-black uppercase tracking-[0.14em] text-[#176b4d]">Scheduling</p>
+          <h2 className="mt-1 text-xl font-black text-[#18231d]">Publishing plan</h2>
+        </div>
         <label className="grid gap-2 text-sm font-bold">
           Scheduled publish time
           <input
@@ -204,8 +222,11 @@ export function PostForm({ post }: { post?: PostWithGear }) {
       </section>
 
       <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Gear items</h2>
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#176b4d]">Affiliate products</p>
+            <h2 className="mt-1 text-2xl font-black text-[#18231d]">Gear items</h2>
+          </div>
           <button type="button" className="border border-[#176b4d] px-4 py-2 text-sm font-bold text-[#176b4d]" onClick={() => setGearItems((items) => [...items, { ...emptyGearItem }])}>
             Add gear
           </button>
@@ -216,7 +237,7 @@ export function PostForm({ post }: { post?: PostWithGear }) {
           </div>
         ) : null}
         {gearItems.map((item, index) => (
-          <div key={item.id ?? index} className="grid gap-4 border border-[#d9d4c7] bg-white p-5">
+          <div key={item.id ?? index} className="grid gap-4 border border-[#d9d4c7] bg-white p-5 shadow-sm">
             <div className="flex items-center justify-between">
               <h3 className="font-bold">Gear item {index + 1}</h3>
               <div className="flex items-center gap-4">
@@ -303,8 +324,8 @@ export function PostForm({ post }: { post?: PostWithGear }) {
         ))}
       </section>
 
-      <div className="flex justify-end">
-        <button type="button" disabled={isPending} onClick={submit} className="min-h-12 bg-[#176b4d] px-6 py-3 font-bold text-white disabled:opacity-60">
+      <div className="sticky bottom-0 z-20 flex justify-end border border-[#d9d4c7] bg-[#fffdf7]/95 p-4 shadow-sm">
+        <button type="button" disabled={isPending} onClick={submit} className="min-h-12 bg-[#176b4d] px-6 py-3 font-black text-white disabled:opacity-60">
           {isPending ? "Saving..." : status === "published" ? "Save and publish" : "Save draft"}
         </button>
       </div>

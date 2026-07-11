@@ -19,7 +19,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           <Link href="/" className="text-xl font-black tracking-tight">OutdoorGearAff</Link>
           <nav className="flex items-center gap-5 text-sm font-bold text-[#425047]">
             <Link href="/">Guides</Link>
-            <Link href="/admin/dashboard" className="hidden sm:inline">Owner</Link>
+            <Link href="/admin/dashboard" className="hidden sm:inline">Editorial Studio</Link>
           </nav>
         </div>
       </header>

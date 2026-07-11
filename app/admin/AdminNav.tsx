@@ -5,46 +5,73 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState, type ReactNode } from "react";
 import { createClient } from "@/lib/supabase/client";
 
-const links = [
-  { href: "/", label: "Public site" },
-  { href: "/admin/posts", label: "Posts" },
-  { href: "/admin/dashboard", label: "Dashboard" },
-  { href: "/admin/calendar", label: "Calendar" },
-  { href: "/admin/revenue", label: "Revenue" },
-  { href: "/admin/subscribers", label: "Newsletter" },
-  { href: "/admin/posts/new", label: "New post" },
+const groups = [
+  {
+    label: "Content",
+    links: [
+      { href: "/admin/posts", label: "Posts" },
+      { href: "/admin/calendar", label: "Calendar" },
+      { href: "/admin/posts/new", label: "New post", emphasis: true },
+    ],
+  },
+  {
+    label: "Performance",
+    links: [
+      { href: "/admin/dashboard", label: "Dashboard" },
+      { href: "/admin/revenue", label: "Revenue" },
+    ],
+  },
+  {
+    label: "Audience",
+    links: [
+      { href: "/admin/subscribers", label: "Newsletter" },
+      { href: "/", label: "Public site" },
+    ],
+  },
 ];
 
 function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
 
   return (
-    <nav className="grid gap-2 text-sm font-bold">
-      {links.map((link) => {
-        const active =
-          link.href === "/"
-            ? pathname === "/"
-            : link.href === "/admin/posts"
-              ? pathname === "/admin/posts" ||
-                (pathname.startsWith("/admin/posts/") && pathname !== "/admin/posts/new")
-            : pathname === link.href || pathname.startsWith(`${link.href}/`);
+    <nav className="grid gap-6 text-sm font-bold">
+      {groups.map((group) => (
+        <div key={group.label}>
+          <p className="mb-2 px-1 text-[11px] font-black uppercase tracking-[0.14em] text-[#7b857d]">
+            {group.label}
+          </p>
+          <div className="grid gap-2">
+            {group.links.map((link) => {
+              const active =
+                link.href === "/"
+                  ? pathname === "/"
+                  : link.href === "/admin/posts"
+                    ? pathname === "/admin/posts" ||
+                      (pathname.startsWith("/admin/posts/") && pathname !== "/admin/posts/new")
+                  : pathname === link.href || pathname.startsWith(`${link.href}/`);
 
-        return (
-          <Link
-            key={link.href}
-            href={link.href}
-            onClick={onNavigate}
-            className={[
-              "flex min-h-11 items-center border px-4 py-3 transition",
-              active
-                ? "border-[#176b4d] bg-[#176b4d] text-white"
-                : "border-transparent text-[#425047] hover:border-[#d9d4c7] hover:bg-[#f7f5ef]",
-            ].join(" ")}
-          >
-            {link.label}
-          </Link>
-        );
-      })}
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={onNavigate}
+                  className={[
+                    "flex min-h-11 items-center justify-between border px-4 py-3 transition",
+                    active
+                      ? "border-[#176b4d] bg-[#176b4d] text-white"
+                      : link.emphasis
+                        ? "border-[#176b4d] bg-[#edf7f1] text-[#176b4d] hover:bg-[#dff0e7]"
+                        : "border-transparent text-[#425047] hover:border-[#d9d4c7] hover:bg-[#f7f5ef]",
+                  ].join(" ")}
+                >
+                  {link.label}
+                  {link.emphasis ? <span className="text-lg leading-none">+</span> : null}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      ))}
     </nav>
   );
 }
@@ -67,7 +94,7 @@ export function AdminNav({ children }: { children: ReactNode }) {
           OutdoorGearAff
         </Link>
         <p className="mt-2 text-sm leading-6 text-[#66736a]">
-          Publishing, affiliate links, and live performance.
+          Editorial studio for gear content, analytics, and growth.
         </p>
         <div className="mt-8">
           <NavLinks />
@@ -126,7 +153,7 @@ export function AdminNav({ children }: { children: ReactNode }) {
                 </button>
               </div>
               <p className="mt-2 text-sm leading-6 text-[#66736a]">
-                Publishing, affiliate links, and live performance.
+                Editorial studio for gear content, analytics, and growth.
               </p>
               <div className="mt-8">
                 <NavLinks onNavigate={() => setMenuOpen(false)} />
