@@ -41,7 +41,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               </p>
               <div className="mt-6 flex flex-wrap gap-3 text-xs font-black uppercase tracking-[0.08em] text-[#66736a]">
                 <span className="border border-[#d9d4c7] bg-white px-3 py-2">{post.gear_items.length} gear picks</span>
-                <span className="border border-[#d9d4c7] bg-white px-3 py-2">Affiliate links tracked</span>
+                <span className="border border-[#d9d4c7] bg-white px-3 py-2">Reader-supported guide</span>
               </div>
             </div>
           </div>
