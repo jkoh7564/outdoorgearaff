@@ -50,7 +50,7 @@ export function ShopButton({
         type="button"
         onClick={trackAndRedirect}
         disabled={state === "loading"}
-        className="inline-flex min-h-11 w-full items-center justify-center bg-[#176b4d] px-4 py-3 text-sm font-bold text-white disabled:opacity-60"
+        className="inline-flex min-h-12 w-full items-center justify-center bg-[#176b4d] px-4 py-3 text-sm font-black text-white shadow-sm transition hover:bg-[#0f4d38] disabled:opacity-60"
       >
         {state === "loading" ? "Opening..." : "Shop Now"}
       </button>

@@ -22,11 +22,14 @@ export function NewsletterForm() {
   }
 
   return (
-    <section className="mt-10 border border-[#d9d4c7] bg-[#fffdf7] p-5">
-      <div className="grid gap-4 md:grid-cols-[1fr_360px] md:items-end">
+    <section className="mt-12 border border-[#d9d4c7] bg-[#1d2520] p-6 text-white shadow-sm sm:p-8">
+      <div className="grid gap-5 md:grid-cols-[1fr_380px] md:items-end">
         <div>
-          <h2 className="text-2xl font-bold">Get new gear guides</h2>
-          <p className="mt-2 text-sm leading-6 text-[#66736a]">
+          <p className="mb-2 text-xs font-black uppercase tracking-[0.14em] text-[#d9c48f]">
+            Trail notes by email
+          </p>
+          <h2 className="text-3xl font-black">Get new gear guides</h2>
+          <p className="mt-2 max-w-xl text-sm leading-6 text-[#d8ded9]">
             Join the list for fresh trail-tested picks and seasonal gear updates.
           </p>
         </div>
@@ -34,7 +37,7 @@ export function NewsletterForm() {
           <input
             type="email"
             placeholder="you@example.com"
-            className="min-h-11 border border-[#c9c2b4] px-3 py-2"
+            className="min-h-12 border border-[#657268] bg-white px-3 py-2 text-[#1d2520]"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
           />
@@ -42,13 +45,13 @@ export function NewsletterForm() {
             type="button"
             disabled={isPending}
             onClick={submit}
-            className="min-h-11 bg-[#176b4d] px-5 py-2 font-bold text-white disabled:opacity-60"
+            className="min-h-12 bg-[#d9c48f] px-5 py-2 font-black text-[#1d2520] disabled:opacity-60"
           >
             {isPending ? "Joining..." : "Join"}
           </button>
         </div>
       </div>
-      {message ? <p className="mt-3 text-sm font-semibold text-[#176b4d]">{message}</p> : null}
+      {message ? <p className="mt-3 text-sm font-bold text-[#d9c48f]">{message}</p> : null}
     </section>
   );
 }
