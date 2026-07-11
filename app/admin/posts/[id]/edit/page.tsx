@@ -3,6 +3,7 @@ import { AdminNav } from "@/app/admin/AdminNav";
 import { getAdminPost } from "@/lib/posts";
 import { PostForm } from "../../PostForm";
 import { AiSummaryPanel } from "../../AiSummaryPanel";
+import { SeoPanel } from "../../SeoPanel";
 
 export const dynamic = "force-dynamic";
 
@@ -15,6 +16,7 @@ export default async function EditPostPage({ params }: { params: Promise<{ id: s
     <AdminNav>
       <section className="mx-auto max-w-4xl px-5 py-8">
         <h1 className="mb-6 text-3xl font-bold">Edit post</h1>
+        <SeoPanel post={post} />
         <AiSummaryPanel post={post} />
         <PostForm post={post} />
       </section>

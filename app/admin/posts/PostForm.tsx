@@ -37,6 +37,7 @@ export function PostForm({ post }: { post?: PostWithGear }) {
   const [heroImageUrl, setHeroImageUrl] = useState(post?.hero_image_url ?? "");
   const [seoTitle, setSeoTitle] = useState(post?.seo_title ?? "");
   const [seoDescription, setSeoDescription] = useState(post?.seo_description ?? "");
+  const [scheduledAt, setScheduledAt] = useState(post?.scheduled_at ? post.scheduled_at.slice(0, 16) : "");
   const [gearItems, setGearItems] = useState<GearItemInput[]>(gearInputFromPost(post));
   const [errors, setErrors] = useState<string[]>([]);
   const [suggestionError, setSuggestionError] = useState("");
@@ -68,6 +69,7 @@ export function PostForm({ post }: { post?: PostWithGear }) {
       hero_image_url: heroImageUrl,
       seo_title: seoTitle,
       seo_description: seoDescription,
+      scheduled_at: scheduledAt,
       gearItems,
     };
 
@@ -161,6 +163,15 @@ export function PostForm({ post }: { post?: PostWithGear }) {
             <input className="border border-[#c9c2b4] px-3 py-2 font-normal" value={seoDescription} onChange={(event) => setSeoDescription(event.target.value)} />
           </label>
         </div>
+        <label className="grid gap-2 text-sm font-bold">
+          Scheduled publish time
+          <input
+            type="datetime-local"
+            className="border border-[#c9c2b4] px-3 py-2 font-normal"
+            value={scheduledAt}
+            onChange={(event) => setScheduledAt(event.target.value)}
+          />
+        </label>
       </section>
 
       <section className="space-y-4">

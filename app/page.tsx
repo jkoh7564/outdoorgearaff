@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getPublishedPosts } from "@/lib/posts";
 import { ensureSeedData } from "@/lib/seed";
+import { NewsletterForm } from "./NewsletterForm";
 
 export const dynamic = "force-dynamic";
 
@@ -78,6 +79,7 @@ export default async function Home() {
             <p className="mt-2 text-[#66736a]">Create and publish the first gear guide to make it visible here.</p>
           </div>
         )}
+        <NewsletterForm />
       </section>
     </main>
   );

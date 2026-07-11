@@ -28,6 +28,10 @@ export type Post = {
   ai_summary_source: string | null;
   ai_summary_confidence: number | null;
   ai_summary_review_status: string | null;
+  scheduled_at: string | null;
+  seo_score: number | null;
+  seo_score_notes: string | null;
+  headline_suggestions: string[] | null;
   published_at: string | null;
   created_at: string;
 };
@@ -56,5 +60,6 @@ export type PostEditorInput = {
   hero_image_url: string;
   seo_title: string;
   seo_description: string;
+  scheduled_at: string;
   gearItems: GearItemInput[];
 };

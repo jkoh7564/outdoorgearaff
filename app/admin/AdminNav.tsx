@@ -9,6 +9,9 @@ const links = [
   { href: "/", label: "Public site" },
   { href: "/admin/posts", label: "Posts" },
   { href: "/admin/dashboard", label: "Dashboard" },
+  { href: "/admin/calendar", label: "Calendar" },
+  { href: "/admin/revenue", label: "Revenue" },
+  { href: "/admin/subscribers", label: "Newsletter" },
   { href: "/admin/posts/new", label: "New post" },
 ];
 
